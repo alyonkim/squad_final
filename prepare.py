@@ -3,7 +3,7 @@ import numpy as np
 from tqdm import tqdm_notebook as tqdm
 import json
 import msgpack
-
+import os.path
 from constants import *
 
 
@@ -14,6 +14,8 @@ def get_data(path):
 
 
 def get_train():
+    if not os.path.isfile("./biases/data.msgpack?dl=1"): 
+        wget.download('https://www.dropbox.com/s/r33ljlagys0wscb/data.msgpack?dl=1', out="./biases/data.msgpack?dl=1")
     data = get_data("./biases/data.msgpack?dl=1")
     train = data['train']
     dev = data['dev']
@@ -21,6 +23,8 @@ def get_train():
 
 
 def get_transfers():
+    if not os.path.isfile("./biases/meta.msgpack?dl=1"): 
+        wget.download('https://www.dropbox.com/s/83txkgiqmdlv1m3/meta.msgpack?dl=1', out="./biases/meta.msgpack?dl=1")
     transfers = get_data("./biases/meta.msgpack?dl=1")
     vocab_tag = transfers['vocab_tag']
     embedding = transfers['embedding']
