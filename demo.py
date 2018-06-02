@@ -23,7 +23,6 @@ def main():
     answer_ends = graph.get_tensor_by_name("answer_ends:0")
     question_length = graph.get_tensor_by_name("question_length:0")
     context_length = graph.get_tensor_by_name("context_length:0")
-    if_train = graph.get_tensor_by_name("if_train:0")
 
     dense_begin = graph.get_tensor_by_name("dense_begin:0")
     dense_end = graph.get_tensor_by_name("dense_end:0")
@@ -45,7 +44,6 @@ def main():
         end_probs_
     ) = sess_r.run([dense_begin, dense_end],
                  feed_dict={
-                     if_train: False,
                      keep_prob: 1.0,
                      questions: questions_,
                      contexts: contexts_,

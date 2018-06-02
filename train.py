@@ -1,10 +1,9 @@
 import tensorflow as tf
 import numpy as np
-from tqdm import tqdm_notebook as tqdm
-import json
 import msgpack
 import random
 
+from tqdm import tqdm_notebook as tqdm
 from constants import *
 
 
@@ -39,8 +38,6 @@ def main():
         dtype=tf.int32, name="question_length", shape=(BATCH_SIZE))
     context_length = tf.placeholder(
         dtype=tf.int32, name="context_length", shape=(BATCH_SIZE))
-    if_train = tf.placeholder(
-        dtype=tf.bool, name="if_train")
 
 
     # Question
@@ -214,7 +211,6 @@ def main():
                     end_probs
                 ) = sess.run([train_step, loss, dense_begin, dense_end],
                              feed_dict={
-                                 if_train: True,
                                  keep_prob: 0.8,
                                  questions: questions_train,
                                  contexts: contexts_train,

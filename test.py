@@ -1,11 +1,13 @@
-from prepare import *
-from constants import *
-
 import tensorflow as tf
 import msgpack
 import numpy as np
+import random
 
-BATCH_NUMBER_TO_CHECK = 8
+from prepare import *
+from constants import *
+
+
+BATCH_NUMBER_TO_CHECK = random.randint(0, DEV_SIZE // BATCH_SIZE)
 
 
 def main():    
@@ -24,6 +26,8 @@ def main():
         indices_train, indices_dev
     ) = get_processed_data()
     
+    np.random.shuffle(indices_dev)
+
     sess = tf.Session() 
     saver = tf.train.import_meta_graph(USE_MODEL_PATH)
     saver.restore(sess_r,tf.train.latest_checkpoint('./biases/'))
@@ -37,7 +41,6 @@ def main():
     answer_ends = graph.get_tensor_by_name("answer_ends:0")
     question_length = graph.get_tensor_by_name("question_length:0")
     context_length = graph.get_tensor_by_name("context_length:0")
-    if_train = graph.get_tensor_by_name("if_train:0")
 
     dense_begin = graph.get_tensor_by_name("dense_begin:0")
     dense_end = graph.get_tensor_by_name("dense_end:0")
@@ -63,7 +66,6 @@ def main():
         end_probs_
     ) = sess_r.run([dense_begin, dense_end],
                  feed_dict={
-                     if_train: False,
                      keep_prob: 1.0,
                      questions: questions_,
                      contexts: contexts_,
