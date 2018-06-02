@@ -3,12 +3,7 @@ from constants import *
 
 import tensorflow as tf
 import msgpack
-import json
-import re
 import numpy as np
-import collections
-import random
-import gensim
 
 BATCH_NUMBER_TO_CHECK = 8
 
@@ -18,16 +13,16 @@ def main():
     vocab_tag, embedding, vocab_ent, vocab = get_transfers()
     
     (
-        context_tokens, context_features,
+        (context_tokens, context_features,
         tag_emb, entity_emb, question_tokens,
         context_text, context_token_span,
-        answer_begin, answer_end,
-        context_tokens_dev, context_features_dev,
+        answer_begin, answer_end),
+        (context_tokens_dev, context_features_dev,
         tag_emb_dev, entity_emb_dev, question_tokens_dev,
         context_text_dev, context_token_span_dev,
-        answer_begin_dev, answer_end_dev,
+        answer_begin_dev, answer_end_dev),
         indices_train, indices_dev
-    ) = get_processed_data(train, dev)
+    ) = get_processed_data()
     
     sess = tf.Session() 
     saver = tf.train.import_meta_graph(USE_MODEL_PATH)
@@ -58,7 +53,8 @@ def main():
         BATCH_SIZE, BATCH_NUMBER_TO_CHECK, indices_dev,
         context_tokens_dev, question_tokens_dev,
         tag_emb_dev, entity_emb_dev, context_features_dev,
-        answer_begin_dev, answer_end_dev
+        answer_begin_dev, answer_end_dev,
+        embedding
     )
 
 
@@ -76,7 +72,7 @@ def main():
                      question_length: question_length_,
                      context_length: context_length_
                  })
-    F1_score = F1_batch(begin_probs_dev, end_probs_dev, begin_dev, end_dev)
+    F1_score = F1_batch(begin_probs_, end_probs_, begin_, end_)
     print(F1_score)
     
     

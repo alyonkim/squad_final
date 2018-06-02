@@ -263,7 +263,6 @@ def gen_demo_batch(
         size,
         context_tokens, question_tokens,
         tag_emb, entity_emb, context_features,
-        answer_begin, answer_end,
         embedding
         ):
     context_tokens = np.array([context_tokens for i in range(size)])
@@ -272,7 +271,6 @@ def gen_demo_batch(
     entity_emb = np.array([entity_emb for i in range(size)])
     context_features = np.array([context_features for i in range(size)])
 
-    l = indices[(batch_number*size):(batch_number + 1) * size]
     contexts_ = np.zeros((size, CONTEXT_MAX_SIZE, EMBEDDING_SIZE_CONTEXT), dtype=np.float32)
     context_lengths_ = np.zeros((size), dtype=np.int32)
     questions_ = np.zeros((size, QUESTION_MAX_SIZE, EMBEDDING_SIZE_QUESTION), dtype=np.float32)
@@ -280,18 +278,18 @@ def gen_demo_batch(
     begin = np.zeros((size), dtype=np.int32)
     end = np.zeros((size), dtype=np.int32)
     for i in range(size):
-        context = context_tokens[l[i]]
-        question = question_tokens[l[i]]
+        context = context_tokens[i]
+        question = question_tokens[i]
         count = 0
         for j in range(CONTEXT_MAX_SIZE):
             current_tag = np.zeros(TAG_SIZE, dtype=np.float32)
-            current_tag[tag_emb[l[i]][j]] = 1.0
+            current_tag[tag_emb[i][j]] = 1.0
             current_entity = np.zeros(ENTITY_SIZE, dtype=np.float32)
-            current_entity[entity_emb[l[i]][j]] = 1.0
+            current_entity[entity_emb[i][j]] = 1.0
             
             current_emb = np.append(embedding[context[j]], current_tag)
             current_emb = np.append(current_emb, current_entity)
-            current_emb = np.append(current_emb, context_features[l[i]][j])
+            current_emb = np.append(current_emb, context_features[i][j])
             
             contexts_[i][j] = current_emb
             if context[j] != 0:
@@ -303,9 +301,7 @@ def gen_demo_batch(
             if question[j] != 0:
                 count += 1
         question_lengths_[i] = count
-        begin[i] = answer_begin[l[i]]
-        end[i] = answer_end[l[i]]
-    return questions_, contexts_, question_lengths_, context_lengths_, begin, end
+    return questions_, contexts_, question_lengths_, context_lengths_
 
 
 

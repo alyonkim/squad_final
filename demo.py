@@ -5,19 +5,12 @@ import spacy
 from constants import *
 from prepare import *
 
-
 def main():
     _, embedding, _, _ = get_transfers()
     context = input("Type your paragraph:\n")
     question = input("Type your question:\n")
 
-    (
-        context_tokens, context_features,
-        tag_emb, entity_emb, question_tokens,
-        context_text, context_token_span
-    ) = demo_data_preprocessing(context, question)
-
-    sess = tf.Session() 
+    sess_r = tf.Session() 
     saver = tf.train.import_meta_graph(USE_MODEL_PATH)
     saver.restore(sess_r, tf.train.latest_checkpoint('./biases/'))
 
@@ -40,8 +33,6 @@ def main():
         contexts_,
         question_length_,
         context_length_,
-        begin_,
-        end_
     ) = gen_demo_batch(
         BATCH_SIZE,
         context_tokens, question_tokens,
@@ -58,14 +49,12 @@ def main():
                      keep_prob: 1.0,
                      questions: questions_,
                      contexts: contexts_,
-                     answer_begins: begin_,
-                     answer_ends: end_,
                      question_length: question_length_,
                      context_length: context_length_
                  })
-    F1_score = F1_batch(begin_probs_dev, end_probs_dev, begin_dev, end_dev)
-    print(F1_score)
-
- 
+    begin = np.argmax(begin_probs_[0])
+    end = np.argmax(end_probs_[0])
+    print("Predicted answer:\n", context_text[context_token_span[begin][0]:context_token_span[end][1]+1])
+     
 if __name__ == '__main__':
     main()
