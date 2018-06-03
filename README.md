@@ -14,7 +14,7 @@
   python3 + tensorflow, numpy, msgpack, random, spacy, os.path, wget.  
   Подразумевается счёт на GPU и предварительное скачивание библиотеки для spacy:
   ```
-  pip3 -m spacy download en_core_web_sm
+  python3 -m spacy download en_core_web_sm
   ```
 
 ### Инструкция
