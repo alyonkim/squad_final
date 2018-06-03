@@ -7,8 +7,8 @@ from prepare import *
 
 def main():
     _, embedding, _, _ = get_transfers()
-    context = input("Type your paragraph:\n")
-    question = input("Type your question:\n")
+    tag2ind, ent2ind, word2ind = get_smth2ind()
+    nlp = spacy.load('en_core_web_sm')
 
     sess = tf.Session() 
     saver = tf.train.import_meta_graph(USE_MODEL_PATH)
@@ -27,32 +27,55 @@ def main():
     dense_begin = graph.get_tensor_by_name("dense_begin:0")
     dense_end = graph.get_tensor_by_name("dense_end:0")
 
-    (
-        questions_,
-        contexts_,
-        question_length_,
-        context_length_,
-    ) = gen_demo_batch(
-        BATCH_SIZE,
-        context_tokens, question_tokens,
-        tag_emb, entity_emb, context_features,
-        embedding
-    )
+    stop = ''
 
-    (
-        begin_probs_,
-        end_probs_
-    ) = sess.run([dense_begin, dense_end],
-                 feed_dict={
-                     keep_prob: 1.0,
-                     questions: questions_,
-                     contexts: contexts_,
-                     question_length: question_length_,
-                     context_length: context_length_
-                 })
-    begin = np.argmax(begin_probs_[0])
-    end = np.argmax(end_probs_[0])
-    print("Predicted answer:\n", context_text[context_token_span[begin][0]:context_token_span[end][1]+1])
+    while (stop != 'n'):
+        stop = ''
+        context = input("Type your paragraph:\n")
+        question = input("Type your question:\n")
+        print()
+        answer = ''
+        try:
+            (
+                context_tokens, context_features,
+                tag_emb, entity_emb, question_tokens,
+                context_text, context_token_span
+            ) = demo_data_preprocessing(context, question, tag2ind, ent2ind, word2ind, nlp)
+
+            (
+                questions_,
+                contexts_,
+                question_length_,
+                context_length_,
+            ) = gen_demo_batch(
+                BATCH_SIZE,
+                context_tokens, question_tokens,
+                tag_emb, entity_emb, context_features,
+                embedding
+            )
+
+            (
+                begin_probs_,
+                end_probs_
+            ) = sess.run([dense_begin, dense_end],
+                         feed_dict={
+                             keep_prob: 1.0,
+                             questions: questions_,
+                             contexts: contexts_,
+                             question_length: question_length_,
+                             context_length: context_length_
+                         })
+            begin = np.argmax(begin_probs_[0])
+            end = np.argmax(end_probs_[0])
+            answer = context_text[context_token_span[begin][0]:context_token_span[end][1]+1]
+            print("Predicted answer:\n", answer)
+        except:
+            print("Sorry, something went wrong. Probably we don't know some words you typed. Please, try again with other context or question.")
+            continue
+            
+        while (stop != 'y' and stop != 'n'):
+            stop = input("Do you want to retry? [y/n]")
+
      
 if __name__ == '__main__':
     main()

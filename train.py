@@ -3,7 +3,6 @@ import numpy as np
 import msgpack
 import random
 
-from tqdm import tqdm_notebook as tqdm
 from constants import *
 from prepare import *
 
@@ -186,10 +185,10 @@ def main():
     saver = tf.train.Saver()
 
     try:
-        for j in tqdm(range(TRAINING_EPOCHS)):
+        for j in range(TRAINING_EPOCHS):
             np.random.shuffle(indices_train)
             np.random.shuffle(indices_dev)
-            for i in tqdm(range(BATCHES_IN_EPOCH)):
+            for i in range(BATCHES_IN_EPOCH):
                 (
                     questions_train,
                     contexts_train,

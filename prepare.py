@@ -5,7 +5,6 @@ import os.path
 import spacy
 import wget
 
-from tqdm import tqdm_notebook as tqdm
 from constants import *
 
 
@@ -42,11 +41,11 @@ def get_smth2ind():
     tag2ind = dict()
     ent2ind = dict()
     word2ind = dict()
-    for i in tqdm(range(len(vocab_tag))):
+    for i in range(len(vocab_tag)):
         tag2ind[vocab_tag[i]] = i
-    for i in tqdm(range(len(vocab_ent))):
+    for i in range(len(vocab_ent)):
         ent2ind[vocab_ent[i]] = i
-    for i in tqdm(range(len(vocab))):
+    for i in range(len(vocab)):
         word2ind[vocab[i]] = i
 
     return tag2ind, ent2ind, word2ind
@@ -90,7 +89,7 @@ def del_bad_answers_dev(dev):
 
 def prepare_dev(dev):
     dev = del_bad_answers_dev(dev)
-    for i in tqdm(range(len(dev))):
+    for i in range(len(dev)):
         begin, end, _ = find_dev_answer(dev[i][6], dev[i][8][0], dev[i][7])
         dev[i].remove(dev[i][8])
         dev[i].append(begin)
@@ -112,7 +111,7 @@ def preprocessing(size, dataset):
     context_text = list()
     context_token_span = list()
 
-    for i in tqdm(range(size)):
+    for i in range(size):
         context_text.append(dataset[i][6])
         context_token_span.append(dataset[i][7])
         current_context_size = len(dataset[i][1])
@@ -197,10 +196,7 @@ def gen_batch(
     return questions_, contexts_, question_lengths_, context_lengths_, begin, end
 
 
-def demo_data_preprocessing(context, question):
-    tag2ind, ent2ind, word2ind = get_smth2ind()
-    nlp = spacy.load('en_core_web_sm')
-
+def demo_data_preprocessing(context, question, tag2ind, ent2ind, word2ind, nlp):
     context_tokens = np.zeros((CONTEXT_MAX_SIZE), dtype=np.int32)
     question_tokens = np.zeros((QUESTION_MAX_SIZE), dtype=np.int32)
 
