@@ -30,7 +30,7 @@ def main():
 
     sess = tf.Session() 
     saver = tf.train.import_meta_graph(USE_MODEL_PATH)
-    saver.restore(sess_r,tf.train.latest_checkpoint('./biases/'))
+    saver.restore(sess,tf.train.latest_checkpoint('./biases/'))
 
     graph = tf.get_default_graph()
 
@@ -64,7 +64,7 @@ def main():
     (
         begin_probs_,
         end_probs_
-    ) = sess_r.run([dense_begin, dense_end],
+    ) = sess.run([dense_begin, dense_end],
                  feed_dict={
                      keep_prob: 1.0,
                      questions: questions_,
