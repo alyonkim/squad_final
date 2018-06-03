@@ -5,6 +5,7 @@ import random
 
 from tqdm import tqdm_notebook as tqdm
 from constants import *
+from prepare import *
 
 
 def main():
