@@ -14,5 +14,3 @@ TRAINING_EPOCHS = 10
 LSTM_CELL_HIDDEN_SIZE = 200
 
 USE_MODEL_PATH = './biases/actual.meta'
-SAVE_MODEL_PATH = './biases/model_demo'
-SAVE_STEP_MODEL_PATH = './biases/model_step_demo'
