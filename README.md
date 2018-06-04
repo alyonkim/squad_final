@@ -12,8 +12,9 @@
 
 ### Требования:
   python3 + tensorflow, numpy, msgpack, random, spacy, os.path, wget.  
-  Подразумевается счёт на GPU и предварительное скачивание библиотеки для spacy:
+  Подразумевается счёт на GPU и предварительное скачивание библиотеки для spacy.
   ```
+  pip3 install tensorflow numpy msgpack spacy wget
   python3 -m spacy download en_core_web_sm
   ```
 
