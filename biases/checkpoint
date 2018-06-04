@@ -1,2 +1,2 @@
-model_checkpoint_path: "temp_model-2"
-all_model_checkpoint_paths: "temp_model-2"
+model_checkpoint_path: "actual"
+all_model_checkpoint_paths: "actual"
