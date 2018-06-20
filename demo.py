@@ -32,6 +32,7 @@ def main():
     while (stop != 'n'):
         stop = ''
         context = input("Type your paragraph:\n")
+        print()
         question = input("Type your question:\n")
         print()
         answer = ''
@@ -67,14 +68,15 @@ def main():
                          })
             begin = np.argmax(begin_probs_[0])
             end = np.argmax(end_probs_[0])
-            answer = context_text[context_token_span[begin][0]:context_token_span[end][1]+1]
+            answer = context_text[context_token_span[begin][0]:context_token_span[end][1]]
             print("Predicted answer:\n", answer)
         except:
             print("Sorry, something went wrong. Probably we don't know some words you typed. Please, try again with other context or question.")
             continue
             
         while (stop != 'y' and stop != 'n'):
-            stop = input("Do you want to retry? [y/n]")
+            stop = input("Do you want to retry? [y/n]\n")
+            print()
 
      
 if __name__ == '__main__':

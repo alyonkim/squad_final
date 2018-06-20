@@ -219,7 +219,8 @@ def demo_data_preprocessing(context, question, tag2ind, ent2ind, word2ind, nlp):
     
     i = 0
     for context_token in context:
-        context_token_span.append([i, i + len(context_token.text) - 1])
+        beg = context_text.find(context_token.text, i)
+        context_token_span.append([beg, beg + len(context_token.text)])
         i += len(context_token.text)
     
     for i in range(len(context)):
